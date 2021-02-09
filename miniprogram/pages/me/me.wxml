@@ -1,6 +1,9 @@
 <view class="user-container">
   <!-- 已登录 -->
-  <view wx:if="{{userInfo && Object.keys(userInfo).length}}">userInfo</view>
+  <view wx:if="{{userInfo.openid}}">
+    <image class="avatar" src="{{userInfo.avatarUrl}}"></image>
+    <view>{{userInfo.nickName}}</view>
+  </view>
   <!-- 未登录 -->
   <view wx:else>
     <image class="avatar" src="../../images/user-unlogin.png"></image>
@@ -11,5 +14,15 @@
         bindgetuserinfo="ongetUserInfo"
       >登录</button>
     </view> 
+  </view>
+  <view>
+    <button
+      wx:if="{{userInfo.openid}}"
+      type="warn"
+      bindtap="scanCode"
+    >添加图书</button>
+    <button
+      open-type="contact"
+    >客服</button>
   </view>
 </view>

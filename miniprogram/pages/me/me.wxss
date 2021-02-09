@@ -8,3 +8,6 @@
   height: 200rpx;
   border-radius: 50%;
 }
+button {
+  margin-top: 20rpx;
+}

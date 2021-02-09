@@ -5,7 +5,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-    userInfo: {}
+    userInfo: wx.getStorageSync('userInfo') || {}
   },
 
   /**
@@ -65,6 +65,42 @@ Page({
   },
   // 获取用户信息
   ongetUserInfo (e) {
-    console.log(e)
+    // console.log(e)
+    let {userInfo} = e.detail
+    // console.log(userInfo)
+    // 调用云函数 获取用户openid
+    wx.cloud.callFunction({
+      name: 'login',
+      complete: res => {
+        // console.log(res)
+        let {openid} = res.result
+        userInfo.openid = openid
+        this.setData({
+          userInfo
+        })
+        // 写入本地缓存
+        wx.setStorageSync('userInfo', userInfo)
+        console.log(this.data.userInfo)
+      }
+    })
+  },
+  // 扫码
+  scanCode () {
+    wx.scanCode({
+      success: res => {
+        console.log(res.result)
+        // 获取图书isbn号，去豆瓣获取详情
+        this.addBook(res.result)
+      }
+    })
+  },
+  addBook () {
+    wx.cloud.callFunction({
+      name: 'getDouban',
+      data: {isbn},
+      success: ({result}) => {
+        console.log(result)
+      }
+    })
   }
 })
